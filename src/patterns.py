@@ -43,7 +43,7 @@ def detect_patterns(password):
 
         for sequence in sequential_numbers:
             if sequence in password:
-                Warning.append("contains a predictable number squence")
+                Warning.append("contains a predictable number sequence")
                 break
 
         sequencial_letters=[
