@@ -11,6 +11,7 @@ from .components import (
 from analyzer import analyze_password as analyze_password_data
 from entropy import calculate_character_pool, calculate_entropy
 from strength import classify_strength
+from patterns import detect_patterns
 
 
 class PasswordSecurityApp:
@@ -41,6 +42,7 @@ class PasswordSecurityApp:
         pool = calculate_character_pool(password)
         entropy = calculate_entropy(password)
         strength = classify_strength(entropy)
+        warnings = detect_patterns(password)
 
         result_text = (
             f"Length: {analysis_result['length']}\n"
@@ -51,7 +53,17 @@ class PasswordSecurityApp:
             f"\nCharacter Pool Size: {pool}\n"
             f"Estimated Entropy: {entropy:.2f} bits\n"
             f"Password Strength: {strength}"
+            f"\nSecurity Warnings:\n"
         )
+
+        if warnings:
+            result_text += "\n"
+            for warning in warnings:
+                result_text += f"- ⚠{warning}\n"
+
+        else:
+            result_text += "\n✓No security warnings detected."
+        
 
         self.results_label.config(text=result_text)
 
