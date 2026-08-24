@@ -1,5 +1,6 @@
 from analyzer import analyze_password
 from entropy import calculate_character_pool, calculate_entropy
+from strength import classify_strength
 
 def main():
     print("="*45)
@@ -22,6 +23,8 @@ def main():
     print(f"\nCharacter Pool Size: {pool}")
     print(f"Estimated Entropy: {entropy:.2f} bits")
 
+    strength=classify_strength(entropy)
+    print(f"Password Strength: {strength}")
 
 if __name__ == "__main__":
     main()
