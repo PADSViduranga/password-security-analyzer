@@ -1,5 +1,5 @@
 from analyzer import analyze_password
-from entropy import calculate_characrer_pool, calculate_entropy
+from entropy import calculate_character_pool, calculate_entropy
 
 def main():
     print("="*45)
@@ -16,7 +16,7 @@ def main():
     print(f"Contains Digit: {analysis_result['has_digit']}")
     print(f"Contains Special Character: {analysis_result['has_special']}")
 
-    pool = calculate_characrer_pool(password)
+    pool = calculate_character_pool(password)
     entropy = calculate_entropy(password)
 
     print(f"\nCharacter Pool Size: {pool}")
