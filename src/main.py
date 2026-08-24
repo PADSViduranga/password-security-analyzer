@@ -2,6 +2,7 @@ from analyzer import analyze_password
 from entropy import calculate_character_pool, calculate_entropy
 from strength import classify_strength
 from patterns import detect_patterns
+from recommendations import generate_recommendations
 
 def main():
     print("="*45)
@@ -38,6 +39,13 @@ def main():
         print("\nSecurity Warnings:")
         print("✓ No obvious predictable patterns detected")
 
+    reccomendations=generate_recommendations(
+        password,
+        analysis_result,
+        Warning,
+        entropy)
 
+    for recommendation in reccomendations:
+        print(f"💡 {recommendation}")
 if __name__ == "__main__":
     main()
