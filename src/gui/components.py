@@ -61,3 +61,26 @@ def create_analyze_button(parent, command):
     button.pack(pady=15)
 
     return button
+
+def create_results_area(parent):
+    results_frame=tk.Frame(parent)
+
+    results_title=tk.Label(
+        results_frame,
+        text="Analysis Results:",
+        font=("Helvetica", 16, "bold")
+    )
+    results_title.pack(pady=(10,5))
+
+    results_label=tk.Label(
+        results_frame,
+        text="Enter a password and click Analyze Password.",
+        font=("Helvetica", 11),
+         justify="left"
+    )
+
+    results_label.pack()
+
+    results_frame.pack(pady=10)
+
+    return results_label
