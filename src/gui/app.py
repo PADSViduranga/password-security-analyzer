@@ -5,13 +5,14 @@ from .components import (
     create_header,
     create_password_input,
     create_analyze_button,
-     create_results_area
+    create_results_area
 )
 
 from analyzer import analyze_password as analyze_password_data
 from entropy import calculate_character_pool, calculate_entropy
 from strength import classify_strength
 from patterns import detect_patterns
+from recommendations import generate_recommendations
 
 
 class PasswordSecurityApp:
@@ -43,6 +44,12 @@ class PasswordSecurityApp:
         entropy = calculate_entropy(password)
         strength = classify_strength(entropy)
         warnings = detect_patterns(password)
+        recommendations=generate_recommendations(
+            password,
+            analysis_result,
+            warnings,
+            entropy
+        )
 
         result_text = (
             f"Length: {analysis_result['length']}\n"
@@ -63,6 +70,11 @@ class PasswordSecurityApp:
 
         else:
             result_text += "\n✓No security warnings detected."
+
+        result_text += "\nRecommendations:\n"
+
+        for recommendation in recommendations:
+            result_text += f"• {recommendation}\n"
         
 
         self.results_label.config(text=result_text)
