@@ -1,11 +1,16 @@
 import tkinter as tk
+
+import entropy
 from .components import (
     create_header,
     create_password_input,
     create_analyze_button,
      create_results_area
 )
+
 from analyzer import analyze_password as analyze_password_data
+from entropy import calculate_character_pool, calculate_entropy
+from strength import classify_strength
 
 
 class PasswordSecurityApp:
@@ -33,6 +38,9 @@ class PasswordSecurityApp:
         password= self.password_entry.get()
 
         analysis_result = analyze_password_data(password)
+        pool = calculate_character_pool(password)
+        entropy = calculate_entropy(password)
+        strength = classify_strength(entropy)
 
         result_text = (
             f"Length: {analysis_result['length']}\n"
@@ -40,6 +48,9 @@ class PasswordSecurityApp:
             f"Lowercase: {analysis_result['has_lowercase']}\n"
             f"Digit: {analysis_result['has_digit']}\n"
             f"Special Character: {analysis_result['has_special']}"
+            f"\nCharacter Pool Size: {pool}\n"
+            f"Estimated Entropy: {entropy:.2f} bits\n"
+            f"Password Strength: {strength}"
         )
 
         self.results_label.config(text=result_text)
