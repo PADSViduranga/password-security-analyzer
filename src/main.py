@@ -1,6 +1,7 @@
 from analyzer import analyze_password
 from entropy import calculate_character_pool, calculate_entropy
 from strength import classify_strength
+from patterns import detect_patterns
 
 def main():
     print("="*45)
@@ -25,6 +26,18 @@ def main():
 
     strength=classify_strength(entropy)
     print(f"Password Strength: {strength}")
+
+    Warning=detect_patterns(password)
+
+    if Warning:
+        print("\nSecurity warnings")
+        for warning in Warning:
+             print(f"⚠ {warning}")
+
+    else:
+        print("\nSecurity Warnings:")
+        print("✓ No obvious predictable patterns detected")
+
 
 if __name__ == "__main__":
     main()
