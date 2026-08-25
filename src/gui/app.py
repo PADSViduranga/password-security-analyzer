@@ -1,6 +1,15 @@
 import tkinter as tk
 
-import entropy
+from .styles import (
+    VERY_WEAK_COLOR,
+    WEAK_COLOR,
+    MODERATE_COLOR,
+    STRONG_COLOR,
+    VERY_STRONG_COLOR,
+    WARNING_COLOR,
+    TEXT
+)
+
 from .components import (
     create_header,
     create_password_input,
@@ -16,78 +25,118 @@ from recommendations import generate_recommendations
 
 
 class PasswordSecurityApp:
+
     def __init__(self):
         self.window = tk.Tk()
 
-
-
         self.window.title("Password Security Analyzer")
-        self.window.geometry("700x600")
+        self.window.geometry("700x850")
         self.window.resizable(False, False)
 
         create_header(self.window)
-        self.password_entry = create_password_input(self.window)
+
+        self.password_entry = create_password_input(
+            self.window
+        )
 
         create_analyze_button(
-            self.window, 
+            self.window,
             self.analyze_password
-            )
+        )
 
-        self.results_label = create_results_area(self.window)
-
+        (
+            self.results_label,
+            self.strength_label,
+            self.warnings_label
+        ) = create_results_area(self.window)
 
     def analyze_password(self):
-        password= self.password_entry.get()
+        password = self.password_entry.get()
 
+        # Analyze password characteristics
         analysis_result = analyze_password_data(password)
+
+        # Calculate entropy information
         pool = calculate_character_pool(password)
         entropy = calculate_entropy(password)
+
+        # Determine password strength
         strength = classify_strength(entropy)
+
+        # Choose strength color
+        if strength == "Very Weak":
+            strength_color = VERY_WEAK_COLOR
+
+        elif strength == "Weak":
+            strength_color = WEAK_COLOR
+
+        elif strength == "Moderate":
+            strength_color = MODERATE_COLOR
+
+        elif strength == "Strong":
+            strength_color = STRONG_COLOR
+
+        elif strength == "Very Strong":
+            strength_color = VERY_STRONG_COLOR
+
+        else:
+            strength_color = TEXT
+
+        # Update strength display
+        self.strength_label.config(
+            text=f"Strength: {strength}",
+            fg=strength_color
+        )
+
+        # Detect predictable patterns
         warnings = detect_patterns(password)
-        recommendations=generate_recommendations(
+
+        # Generate recommendations
+        recommendations = generate_recommendations(
             password,
             analysis_result,
             warnings,
             entropy
         )
 
+        # Build general analysis results
         result_text = (
             f"Length: {analysis_result['length']}\n"
             f"Uppercase: {analysis_result['has_uppercase']}\n"
             f"Lowercase: {analysis_result['has_lowercase']}\n"
             f"Digit: {analysis_result['has_digit']}\n"
-            f"Special Character: {analysis_result['has_special']}"
-            f"\nCharacter Pool Size: {pool}\n"
+            f"Special Character: {analysis_result['has_special']}\n"
+            f"Character Pool Size: {pool}\n"
             f"Estimated Entropy: {entropy:.2f} bits\n"
-            f"Password Strength: {strength}"
-            f"\nSecurity Warnings:\n"
+            f"\nRecommendations:\n"
         )
 
-        if warnings:
-            result_text += "\n"
-            for warning in warnings:
-                result_text += f"- ⚠{warning}\n"
-
-        else:
-            result_text += "\n✓No security warnings detected."
-
-        result_text += "\nRecommendations:\n"
-
+        # Add recommendations
         for recommendation in recommendations:
             result_text += f"• {recommendation}\n"
-        
 
-        self.results_label.config(text=result_text)
+        # Display general results
+        self.results_label.config(
+            text=result_text
+        )
 
-        print(f"Analyzing password: {password}")
-        print("analyzing passsword")
-        print(f"Length: {analysis_result['length']}")
-        print(f"Uppercase: {analysis_result['has_uppercase']}")
-        print(f"Lowercase: {analysis_result['has_lowercase']}")
-        print(f"Digit: {analysis_result['has_digit']}")
-        print(f"Special Character: {analysis_result['has_special']}")
+        # Display security warnings separately
+        if warnings:
+            warning_text = "Security Warnings:\n\n"
 
+            for warning in warnings:
+                warning_text += f"⚠ {warning}\n"
 
+            self.warnings_label.config(
+                text=warning_text,
+                fg=WARNING_COLOR
+            )
+
+        else:
+            self.warnings_label.config(
+                text="Security Warnings:\n\n✓ No security warnings detected.",
+                fg=STRONG_COLOR
+            )
 
     def run(self):
         self.window.mainloop()
