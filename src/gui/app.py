@@ -7,6 +7,7 @@ from .styles import (
     STRONG_COLOR,
     VERY_STRONG_COLOR,
     WARNING_COLOR,
+    RECOMMENDATION_COLOR,
     TEXT
 )
 
@@ -47,7 +48,8 @@ class PasswordSecurityApp:
         (
             self.results_label,
             self.strength_label,
-            self.warnings_label
+            self.warnings_label,
+            self.recommendations_label
         ) = create_results_area(self.window)
 
     def analyze_password(self):
@@ -56,14 +58,14 @@ class PasswordSecurityApp:
         # Analyze password characteristics
         analysis_result = analyze_password_data(password)
 
-        # Calculate entropy information
+        # Calculate entropy
         pool = calculate_character_pool(password)
         entropy = calculate_entropy(password)
 
-        # Determine password strength
+        # Determine strength
         strength = classify_strength(entropy)
 
-        # Choose strength color
+        # Select strength color
         if strength == "Very Weak":
             strength_color = VERY_WEAK_COLOR
 
@@ -82,13 +84,13 @@ class PasswordSecurityApp:
         else:
             strength_color = TEXT
 
-        # Update strength display
+        # Update strength
         self.strength_label.config(
             text=f"Strength: {strength}",
             fg=strength_color
         )
 
-        # Detect predictable patterns
+        # Detect patterns
         warnings = detect_patterns(password)
 
         # Generate recommendations
@@ -99,7 +101,7 @@ class PasswordSecurityApp:
             entropy
         )
 
-        # Build general analysis results
+        # General analysis results
         result_text = (
             f"Length: {analysis_result['length']}\n"
             f"Uppercase: {analysis_result['has_uppercase']}\n"
@@ -107,20 +109,14 @@ class PasswordSecurityApp:
             f"Digit: {analysis_result['has_digit']}\n"
             f"Special Character: {analysis_result['has_special']}\n"
             f"Character Pool Size: {pool}\n"
-            f"Estimated Entropy: {entropy:.2f} bits\n"
-            f"\nRecommendations:\n"
+            f"Estimated Entropy: {entropy:.2f} bits"
         )
 
-        # Add recommendations
-        for recommendation in recommendations:
-            result_text += f"• {recommendation}\n"
-
-        # Display general results
         self.results_label.config(
             text=result_text
         )
 
-        # Display security warnings separately
+        # Security warnings
         if warnings:
             warning_text = "Security Warnings:\n\n"
 
@@ -137,6 +133,17 @@ class PasswordSecurityApp:
                 text="Security Warnings:\n\n✓ No security warnings detected.",
                 fg=STRONG_COLOR
             )
+
+        # Recommendations
+        recommendation_text = "Recommendations:\n\n"
+
+        for recommendation in recommendations:
+            recommendation_text += f"• {recommendation}\n"
+
+        self.recommendations_label.config(
+            text=recommendation_text,
+            fg=RECOMMENDATION_COLOR
+        )
 
     def run(self):
         self.window.mainloop()
