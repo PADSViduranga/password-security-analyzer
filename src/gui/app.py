@@ -31,7 +31,7 @@ class PasswordSecurityApp:
         self.window = tk.Tk()
 
         self.window.title("Password Security Analyzer")
-        self.window.geometry("700x850")
+        self.window.geometry("700x780")
         self.window.resizable(False, False)
 
         create_header(self.window)
@@ -62,10 +62,10 @@ class PasswordSecurityApp:
         pool = calculate_character_pool(password)
         entropy = calculate_entropy(password)
 
-        # Determine strength
+        # Determine password strength
         strength = classify_strength(entropy)
 
-        # Select strength color
+        # Choose strength color
         if strength == "Very Weak":
             strength_color = VERY_WEAK_COLOR
 
@@ -90,7 +90,7 @@ class PasswordSecurityApp:
             fg=strength_color
         )
 
-        # Detect patterns
+        # Detect predictable patterns
         warnings = detect_patterns(password)
 
         # Generate recommendations

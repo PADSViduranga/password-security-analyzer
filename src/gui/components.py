@@ -116,7 +116,7 @@ def create_results_area(parent):
 
     results_title = tk.Label(
         results_frame,
-        text="Analysis Results:",
+        text="Analysis Results",
         font=SECTION_FONT,
         bg=RESULT_BG,
         fg=TEXT
@@ -124,7 +124,7 @@ def create_results_area(parent):
 
     results_title.pack(pady=(10, 5))
 
-    # Strength
+    # Password strength
     strength_label = tk.Label(
         results_frame,
         text="Strength: --",
@@ -190,10 +190,10 @@ def create_results_area(parent):
     )
 
     results_frame.pack(
-        pady=15,
+        pady=10,
         padx=40,
-        ipadx=30,
-        ipady=12,
+        ipadx=25,
+        ipady=8,
         fill="x"
     )
 
