@@ -55,14 +55,82 @@ class PasswordSecurityApp:
     def analyze_password(self):
         password = self.password_entry.get()
 
-        # Analyze password characteristics
+        # --------------------------------------------------
+        # 1. Empty password validation
+        # --------------------------------------------------
+
+        if not password:
+            self.results_label.config(
+                text="Please enter a password before analyzing."
+            )
+
+            self.strength_label.config(
+                text="Strength: --",
+                fg=TEXT
+            )
+
+            self.warnings_label.config(
+                text=""
+            )
+
+            self.recommendations_label.config(
+                text=""
+            )
+
+            return
+
+        # --------------------------------------------------
+        # 2. Minimum length validation
+        # --------------------------------------------------
+
+        if len(password) < 8:
+            self.results_label.config(
+                text="Password must contain at least 8 characters."
+            )
+
+            self.strength_label.config(
+                text="Strength: Too Short",
+                fg=VERY_WEAK_COLOR
+            )
+
+            self.warnings_label.config(
+                text=(
+                    "Security Warnings:\n\n"
+                    "⚠ Password is shorter than the "
+                    "recommended minimum of 8 characters."
+                ),
+                fg=WARNING_COLOR
+            )
+
+            self.recommendations_label.config(
+                text=(
+                    "Recommendations:\n\n"
+                    "• Use at least 8 characters.\n"
+                    "• Consider using 12 or more characters "
+                    "for better security."
+                ),
+                fg=RECOMMENDATION_COLOR
+            )
+
+            return
+
+        # --------------------------------------------------
+        # 3. Analyze password characteristics
+        # --------------------------------------------------
+
         analysis_result = analyze_password_data(password)
 
-        # Calculate entropy
+        # --------------------------------------------------
+        # 4. Calculate entropy
+        # --------------------------------------------------
+
         pool = calculate_character_pool(password)
         entropy = calculate_entropy(password)
 
-        # Determine password strength
+        # --------------------------------------------------
+        # 5. Determine password strength
+        # --------------------------------------------------
+
         strength = classify_strength(entropy)
 
         # Choose strength color
@@ -84,16 +152,22 @@ class PasswordSecurityApp:
         else:
             strength_color = TEXT
 
-        # Update strength
+        # Update strength display
         self.strength_label.config(
             text=f"Strength: {strength}",
             fg=strength_color
         )
 
-        # Detect predictable patterns
+        # --------------------------------------------------
+        # 6. Detect predictable patterns
+        # --------------------------------------------------
+
         warnings = detect_patterns(password)
 
-        # Generate recommendations
+        # --------------------------------------------------
+        # 7. Generate recommendations
+        # --------------------------------------------------
+
         recommendations = generate_recommendations(
             password,
             analysis_result,
@@ -101,7 +175,10 @@ class PasswordSecurityApp:
             entropy
         )
 
-        # General analysis results
+        # --------------------------------------------------
+        # 8. Display general analysis results
+        # --------------------------------------------------
+
         result_text = (
             f"Length: {analysis_result['length']}\n"
             f"Uppercase: {analysis_result['has_uppercase']}\n"
@@ -116,7 +193,10 @@ class PasswordSecurityApp:
             text=result_text
         )
 
-        # Security warnings
+        # --------------------------------------------------
+        # 9. Display security warnings
+        # --------------------------------------------------
+
         if warnings:
             warning_text = "Security Warnings:\n\n"
 
@@ -130,11 +210,17 @@ class PasswordSecurityApp:
 
         else:
             self.warnings_label.config(
-                text="Security Warnings:\n\n✓ No security warnings detected.",
+                text=(
+                    "Security Warnings:\n\n"
+                    "✓ No security warnings detected."
+                ),
                 fg=STRONG_COLOR
             )
 
-        # Recommendations
+        # --------------------------------------------------
+        # 10. Display recommendations
+        # --------------------------------------------------
+
         recommendation_text = "Recommendations:\n\n"
 
         for recommendation in recommendations:
