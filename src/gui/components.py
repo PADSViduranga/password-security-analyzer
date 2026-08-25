@@ -11,7 +11,8 @@ from .styles import (
     LABEL_FONT,
     BUTTON_FONT,
     WARNING_COLOR,
-    STRONG_COLOR
+    STRONG_COLOR,
+    RECOMMENDATION_COLOR
 )
 
 
@@ -123,7 +124,7 @@ def create_results_area(parent):
 
     results_title.pack(pady=(10, 5))
 
-    # Separate strength display
+    # Strength
     strength_label = tk.Label(
         results_frame,
         text="Strength: --",
@@ -134,7 +135,7 @@ def create_results_area(parent):
 
     strength_label.pack(pady=(5, 10))
 
-    # General analysis results
+    # General analysis
     results_label = tk.Label(
         results_frame,
         text="Enter a password and click Analyze Password.",
@@ -170,6 +171,24 @@ def create_results_area(parent):
         anchor="w"
     )
 
+    # Recommendations
+    recommendations_label = tk.Label(
+        results_frame,
+        text="",
+        font=LABEL_FONT,
+        bg=RESULT_BG,
+        fg=RECOMMENDATION_COLOR,
+        justify="left",
+        anchor="w",
+        wraplength=580
+    )
+
+    recommendations_label.pack(
+        pady=(5, 10),
+        padx=20,
+        anchor="w"
+    )
+
     results_frame.pack(
         pady=15,
         padx=40,
@@ -178,4 +197,9 @@ def create_results_area(parent):
         fill="x"
     )
 
-    return results_label, strength_label, warnings_label
+    return (
+        results_label,
+        strength_label,
+        warnings_label,
+        recommendations_label
+    )
